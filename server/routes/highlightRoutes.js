@@ -13,7 +13,7 @@ class HighlightRoutes {
     const { fileName } = req.body;
     const output = await createPresignedHighlightPost(fileName);
     console.log('output', output)
-    res.sendStatus(200);
+    res.send(output);
   }
 }
 
