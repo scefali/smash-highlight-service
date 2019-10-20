@@ -2,11 +2,12 @@ import React from 'react';
 import Dropzone from 'react-dropzone';
 
 import { uploadFileToS3 } from '../services/api';
+import { readSlippiBuffer } from '../common/slippi';
 
 class DropFile extends React.Component {
   uploadFileToS3 = async (file, data) => {
     await uploadFileToS3(file, data);
-  }
+  };
   onDrop = acceptedFiles => {
     console.log('start', acceptedFiles);
 
@@ -17,11 +18,16 @@ class DropFile extends React.Component {
       reader.onerror = () => console.log('file reading has failed');
       reader.onload = () => {
         // Do whatever you want with the file contents
-        const binaryStr = reader.result;
-        console.log('file', file, binaryStr);
-        this.uploadFileToS3(file, binaryStr);
+        // const binaryStr = reader.result;
+        // console.log('file', file, binaryStr);
+        // this.uploadFileToS3(file, binaryStr);
+        
+        const result = Buffer.from(reader.result)
+        readSlippiBuffer(result);
       };
-      reader.readAsBinaryString(file);
+
+      // reader.readAsBinaryString(file);
+      reader.readAsArrayBuffer(file);
     });
   };
   render() {
