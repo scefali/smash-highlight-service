@@ -1,43 +1,29 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
 
-import { uploadFileToS3 } from '../services/api';
-import { readSlippiBuffer } from '../common/slippi';
+import { convertSaveSlippiFiles } from '../services/fileReader';
 
 class DropFile extends React.Component {
-  uploadFileToS3 = async (file, data) => {
-    await uploadFileToS3(file, data);
+  state = {
+    error: ''
   };
-  onDrop = acceptedFiles => {
-    console.log('start', acceptedFiles);
-
-    acceptedFiles.forEach(file => {
-      const reader = new FileReader();
-
-      reader.onabort = () => console.log('file reading was aborted');
-      reader.onerror = () => console.log('file reading has failed');
-      reader.onload = () => {
-        // Do whatever you want with the file contents
-        // const binaryStr = reader.result;
-        // console.log('file', file, binaryStr);
-        // this.uploadFileToS3(file, binaryStr);
-        
-        const result = Buffer.from(reader.result)
-        readSlippiBuffer(result);
-      };
-
-      // reader.readAsBinaryString(file);
-      reader.readAsArrayBuffer(file);
-    });
+  onDrop = async acceptedFiles => {
+    const slippiFiles = acceptedFiles.filter(file => file.name.endsWith('.slp'));
+    if (slippiFiles.length === 0) {
+      return this.setState({ error: 'Must provide at least one .slp file' });
+    }
+    await convertSaveSlippiFiles(slippiFiles);
   };
   render() {
+    const { error } = this.state;
     return (
       <Dropzone onDrop={this.onDrop}>
         {({ getRootProps, getInputProps }) => (
           <section>
             <div {...getRootProps()}>
               <input {...getInputProps()} />
-              <p>Drag 'n' drop some files here, or click to select files</p>
+              <p>Drag and drop Slippi files</p>
+              {error && <p>{error}</p>}
             </div>
           </section>
         )}

@@ -1,5 +1,6 @@
 const { default: SlippiGame } = require('slp-parser-js');
 
+
 const DAMAGE_REQ_FOR_COMBO = 40;
 
 const readSlippiBuffer = slippiBuffer => {
@@ -8,39 +9,42 @@ const readSlippiBuffer = slippiBuffer => {
   const stats = game.getStats();
   const combos = stats.combos;
   console.log('combos', combos);
-  const comboJson = createComboJsonFromGame(game);
-  console.log('comboJson', comboJson);
+  const queue = createComboQueue(game);
+  console.log('queue', queue);
+  const comboJson = {
+    mode: 'queue',
+    queue,
+  }
+
   return comboJson;
 };
 
-const createComboJsonFromGame = game => {
-  const comboJson = {
-    mode: 'queue',
-    queue: []
-  };
+const createComboQueue = game => {
+
+  const queue = [];
+
   const stats = game.getStats();
   const combos = stats.combos;
 
-  for (const combo in combos) {
-    let comboPct = Math.round(combos[combo].endPercent - combos[combo].startPercent);
+  for (const combo of combos) {
+    let comboPct = Math.round(combo.endPercent - combo.startPercent);
     if (comboPct < DAMAGE_REQ_FOR_COMBO) {
       console.log('Combo damage too small: %d', comboPct);
       continue;
     }
-    if (combos[combo].didKill == false) {
+    if (combo.didKill == false) {
       console.log('Non-lethal combo: %d', comboPct);
       continue;
     }
 
     let comboSnip = {
       // path: slippiFile, //TODO: what goes here?
-      startFrame: combos[combo].startFrame,
-      endFrame: combos[combo].endFrame
+      startFrame: combo.startFrame,
+      endFrame: combo.endFrame
     };
-
-    comboJson.queue.push(comboSnip);
+    queue.push(comboSnip);
   }
-  return comboJson;
+  return queue;
 };
 
 module.exports = {
