@@ -1,10 +1,13 @@
-import { save } from 'save-file'
+import { save } from 'save-file';
 
-// import { uploadFileToS3 } from '../services/api';
 import { readSlippiBuffer } from '../common/slippi';
+import { toast } from 'react-toastify';
 
 export const convertSaveSlippiFiles = async acceptedFiles => {
   const comboJson = await Promise.all(acceptedFiles.map(readOneSlippiFile));
+  toast.success('Parsed slippi files successfully', {
+    position: toast.POSITION.TOP_CENTER
+  });
   await save(JSON.stringify(comboJson), 'highlights.json');
 };
 

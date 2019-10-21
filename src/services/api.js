@@ -18,9 +18,10 @@ const genPresignedPost = fileName => {
   return postRequest('/highlight/presignedPost', { fileName });
 };
 
+
+//TODO: Fix below (not working yet)
 export const uploadFileToS3 = async (fileName, data) => {
   const { url, fields } = await genPresignedPost(fileName);
-  console.log('url', url, fields);
   return postRequest(
     url,
     {

@@ -13,9 +13,12 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-dropzone": "^10.1.10",
+    "react-icons": "^3.7.0",
     "react-scripts": "3.2.0",
+    "react-toastify": "^5.4.0",
     "save-file": "^2.3.1",
-    "slp-parser-js": "^4.0.0"
+    "slp-parser-js": "^4.0.0",
+    "styled-components": "^4.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
