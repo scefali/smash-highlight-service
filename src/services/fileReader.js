@@ -6,9 +6,10 @@ import { toast } from 'react-toastify';
 export const convertSaveSlippiFiles = async acceptedFiles => {
   const comboJson = await Promise.all(acceptedFiles.map(readOneSlippiFile));
   toast.success('Parsed slippi files successfully', {
-    position: toast.POSITION.TOP_CENTER
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 3000
   });
-  await save(JSON.stringify(comboJson), 'highlights.json');
+  await save(JSON.stringify(comboJson, null, 2), 'highlights.json');
 };
 
 const readOneSlippiFile = file => {
